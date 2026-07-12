@@ -1,6 +1,18 @@
 @php
     $waBase = 'https://wa.me/' . $wa . '?text=';
     $waGeneral = $waBase . rawurlencode('Halo nttdigital, saya mau pesan undangan pernikahan digital. Boleh info lebih lanjut?');
+    $kategori = collect($themes)->pluck('kategori')->unique()->values();
+    // pasangan nama contoh untuk preview mini
+    $nama = [
+        'sanctuary' => ['Michael', 'Gabriela'],
+        'nikkah'    => ['Reza', 'Nadia'],
+        'tenun'     => ['Yosef', 'Maria'],
+        'flora'     => ['Rian', 'Sinta'],
+        'sasando'   => ['Andi', 'Sinta'],
+        'aurum'     => ['Michael', 'Gabriela'],
+        'modern'    => ['Reza', 'Nadia'],
+        'retro'     => ['Rian', 'Dewi'],
+    ];
 @endphp
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
@@ -8,7 +20,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Undangan Pernikahan Digital — nttdigital.com</title>
-    <meta name="description" content="Undangan pernikahan digital elegan buatan NTT. RSVP online, peta lokasi, galeri, amplop digital. Mulai Rp75.000.">
+    <meta name="description" content="Undangan pernikahan digital elegan buatan NTT. 8 tema pilihan: Kristiani, Islami, Tenun NTT, dan lainnya. RSVP online, peta lokasi, galeri, amplop digital. Mulai Rp75.000.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,7 +53,7 @@
         .gold-sheen{background:linear-gradient(115deg,#B8860B,#E8CC74 50%,#B8860B);-webkit-background-clip:text;background-clip:text;color:transparent}
     </style>
 </head>
-<body class="bg-sand font-sans text-brand-dark antialiased" x-data="{ nav:false }">
+<body class="bg-sand font-sans text-brand-dark antialiased" x-data="{ nav:false, filter:'Semua' }">
 
 {{-- NAV --}}
 <header class="sticky top-0 z-40 border-b border-brand/10 bg-sand/90 backdrop-blur">
@@ -75,43 +87,44 @@
 {{-- HERO --}}
 <section class="relative overflow-hidden bg-brand-dark text-sand">
     <div class="pointer-events-none absolute inset-0" style="background:radial-gradient(80% 60% at 80% 0%, rgba(94,234,212,.15), transparent 60%)"></div>
-    <div class="relative mx-auto grid max-w-6xl gap-10 px-5 py-20 md:grid-cols-2 md:items-center md:py-28">
+    <div class="relative mx-auto grid max-w-6xl gap-10 px-5 py-20 md:grid-cols-2 md:items-center md:py-24">
         <div>
             <p class="text-xs font-semibold uppercase tracking-[0.25em] text-brand-mint">Undangan Pernikahan Digital</p>
             <h1 class="mt-4 font-display text-5xl font-semibold leading-tight md:text-6xl">
                 Bagikan momen bahagiamu, elegan &amp; praktis.
             </h1>
             <p class="mt-5 max-w-md text-sand/80">
-                Undangan digital buatan NTT — lengkap dengan RSVP online, peta lokasi, galeri, hingga amplop digital. Tinggal bagikan lewat WhatsApp.
+                <span class="font-semibold text-brand-mint">8 tema pilihan</span> — Kristiani, Islami, Tenun NTT, dan lainnya.
+                Lengkap dengan RSVP online, peta lokasi, galeri, hingga amplop digital.
             </p>
             <div class="mt-8 flex flex-wrap gap-3">
-                <a href="#tema" class="rounded-full bg-brand-mint px-6 py-3 text-sm font-semibold text-brand-dark hover:brightness-105">Lihat Tema</a>
+                <a href="#tema" class="rounded-full bg-brand-mint px-6 py-3 text-sm font-semibold text-brand-dark hover:brightness-105">Lihat 8 Tema</a>
                 <a href="{{ $waGeneral }}" target="_blank" class="inline-flex items-center gap-2 rounded-full border border-sand/30 px-6 py-3 text-sm font-semibold hover:bg-sand/10">
                     <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.5-.7-2.5-1.3-3.5-3-.3-.5.3-.4.7-1.4.1-.2 0-.4 0-.5C10 9.5 9.5 8.1 9.3 7.6c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-1 2.1-1 2.2 0 .2.2 2.1 1.7 4 1.9 2.5 3.4 3.1 4.6 3.4 1.6.4 2.4.2 2.9-.1.5-.3 1.7-1.1 1.9-1.6.2-.5.2-.9.1-1-.1-.1-.3-.2-.6-.3M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2"/></svg>
                     WhatsApp
                 </a>
             </div>
-            <p class="mt-6 text-xs text-sand/60">Dibuat di Kupang, NTT · 4 tema pilihan · Proses cepat</p>
+            <p class="mt-6 text-xs text-sand/60">Dibuat di Kupang, NTT · Tamu unlimited · Proses cepat</p>
         </div>
 
-        {{-- Stack preview mini keempat tema --}}
+        {{-- Stack preview 4 tema unggulan --}}
         <div class="relative mx-auto grid w-full max-w-sm grid-cols-2 gap-4">
-            <div class="rounded-2xl bg-[#0F3D3A] p-6 text-center shadow-xl">
-                <p class="text-[9px] uppercase tracking-widest text-[#C8A04B]/80">Sasando</p>
-                <p class="mt-3 font-display text-2xl text-[#EFE7D6]">A <span class="text-[#C8A04B]">&amp;</span> S</p>
+            <div class="rounded-2xl bg-[#22303B] p-6 text-center shadow-xl">
+                <p class="text-[9px] uppercase tracking-widest text-[#B79457]/90">Kristiani</p>
+                <p class="mt-3 font-display text-2xl text-[#FAF7F1]">M <span class="text-[#B79457]">&amp;</span> G</p>
             </div>
-            <div class="mt-6 rounded-2xl bg-[#4E1D1D] p-6 text-center shadow-xl">
-                <p class="text-[9px] uppercase tracking-widest text-[#C6892C]/90">Tenun</p>
+            <div class="mt-6 rounded-2xl bg-[#0C2419] p-6 text-center shadow-xl">
+                <p class="text-[9px] uppercase tracking-widest text-[#C0A053]/90">Islami</p>
+                <p class="mt-3 font-display text-2xl text-[#FAF6EC]">R <span class="text-[#C0A053]">&amp;</span> N</p>
+            </div>
+            <div class="rounded-2xl bg-[#4E1D1D] p-6 text-center shadow-xl">
+                <p class="text-[9px] uppercase tracking-widest text-[#C6892C]/90">Tenun NTT</p>
                 <p class="mt-3 font-display text-2xl text-[#EFE6D2]">Y <span class="text-[#C6892C]">&amp;</span> M</p>
                 <div class="tenun-mask mx-auto mt-3 h-3 w-16 text-[#C6892C]" style="background-color:currentColor"></div>
             </div>
-            <div class="rounded-2xl border border-brand/10 bg-white p-6 text-center shadow-xl">
-                <p class="text-[9px] uppercase tracking-widest text-slate-400">Modern</p>
-                <p class="mt-3 font-display text-2xl text-slate-900">R <span class="text-[#B08D6A]">&amp;</span> N</p>
-            </div>
-            <div class="mt-6 rounded-2xl bg-[#0C0B0A] p-6 text-center shadow-xl">
-                <p class="text-[9px] uppercase tracking-widest text-[#E8CC74]/80">Aurum</p>
-                <p class="mt-3 gold-sheen font-display text-2xl">M &amp; G</p>
+            <div class="mt-6 rounded-2xl bg-[#FBF8F3] p-6 text-center shadow-xl">
+                <p class="text-[9px] uppercase tracking-widest text-[#7C9082]">Botanical</p>
+                <p class="mt-3 font-display text-2xl text-[#3A4A40]">R <span class="text-[#C98B7E]">&amp;</span> S</p>
             </div>
         </div>
     </div>
@@ -121,28 +134,39 @@
 <section id="tema" class="mx-auto max-w-6xl px-5 py-20">
     <div class="text-center">
         <p class="text-xs font-semibold uppercase tracking-[0.25em] text-brand">Pilihan Tema</p>
-        <h2 class="mt-2 font-display text-4xl font-semibold">Empat gaya, satu yang pas untukmu</h2>
+        <h2 class="mt-2 font-display text-4xl font-semibold">Delapan gaya, satu yang pas untukmu</h2>
         <p class="mx-auto mt-3 max-w-xl text-brand-dark/70">Klik "Lihat Demo" untuk membuka undangan contoh yang bisa langsung kamu jelajahi.</p>
     </div>
 
-    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    {{-- Filter kategori --}}
+    <div class="mt-8 flex flex-wrap justify-center gap-2">
+        <button @click="filter='Semua'"
+                :class="filter==='Semua' ? 'bg-brand text-sand' : 'border border-brand/25 text-brand-dark/70 hover:border-brand'"
+                class="rounded-full px-5 py-2 text-sm font-medium transition">Semua</button>
+        @foreach($kategori as $kat)
+            <button @click="filter='{{ $kat }}'"
+                    :class="filter==='{{ $kat }}' ? 'bg-brand text-sand' : 'border border-brand/25 text-brand-dark/70 hover:border-brand'"
+                    class="rounded-full px-5 py-2 text-sm font-medium transition">{{ $kat }}</button>
+        @endforeach
+    </div>
+
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         @foreach($themes as $t)
-            <div class="flex flex-col overflow-hidden rounded-2xl border border-brand/10 bg-white shadow-sm transition hover:shadow-md">
-                {{-- mini preview per tema --}}
-                @if($t['key']==='sasando')
-                    <div class="flex h-40 items-center justify-center bg-[#0F3D3A]"><span class="font-display text-3xl text-[#EFE7D6]">Andi <span class="text-[#C8A04B]">&amp;</span> Sinta</span></div>
-                @elseif($t['key']==='tenun')
-                    <div class="flex h-40 flex-col items-center justify-center bg-[#4E1D1D]"><span class="font-display text-3xl text-[#EFE6D2]">Yosef <span class="text-[#C6892C]">&amp;</span> Maria</span><div class="tenun-mask mt-3 h-3 w-24 text-[#C6892C]" style="background-color:currentColor"></div></div>
-                @elseif($t['key']==='modern')
-                    <div class="flex h-40 items-center justify-center border-b border-slate-100 bg-white"><span class="font-display text-3xl text-slate-900">Reza <span class="text-[#B08D6A]">&amp;</span> Nadia</span></div>
-                @else
-                    <div class="flex h-40 items-center justify-center bg-[#0C0B0A]"><span class="gold-sheen font-display text-3xl">Michael &amp; Gabriela</span></div>
-                @endif
+            @php [$g, $b] = $nama[$t['key']] ?? ['Andi', 'Sinta']; @endphp
+            <div x-show="filter==='Semua' || filter==='{{ $t['kategori'] }}'" x-transition
+                 class="flex flex-col overflow-hidden rounded-2xl border border-brand/10 bg-white shadow-sm transition hover:shadow-md">
+
+                @include('landing.partials.theme-preview', ['key' => $t['key'], 'groom' => $g, 'bride' => $b])
 
                 <div class="flex flex-1 flex-col p-5">
-                    <h3 class="font-display text-xl font-semibold">{{ $t['name'] }}</h3>
-                    <p class="text-xs font-medium uppercase tracking-wide text-brand">{{ $t['tag'] }}</p>
-                    <p class="mt-2 flex-1 text-sm text-brand-dark/70">{{ $t['desc'] }}</p>
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <h3 class="font-display text-xl font-semibold">{{ $t['name'] }}</h3>
+                            <p class="text-xs font-medium uppercase tracking-wide text-brand">{{ $t['tag'] }}</p>
+                        </div>
+                        <span class="shrink-0 rounded-full bg-brand/10 px-2.5 py-1 text-[10px] font-semibold text-brand">{{ $t['kategori'] }}</span>
+                    </div>
+                    <p class="mt-3 flex-1 text-sm text-brand-dark/70">{{ $t['desc'] }}</p>
                     <a href="/u/{{ $t['slug'] }}?to=Tamu+Undangan" target="_blank"
                        class="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-sand hover:bg-brand-deep">
                         Lihat Demo
@@ -191,7 +215,7 @@
     <div class="text-center">
         <p class="text-xs font-semibold uppercase tracking-[0.25em] text-brand">Harga</p>
         <h2 class="mt-2 font-display text-4xl font-semibold">Pilih paket sesuai kebutuhan</h2>
-        <p class="mx-auto mt-3 max-w-xl text-brand-dark/70">Harga sekali bayar, tanpa biaya tersembunyi. Semua paket sudah termasuk pembuatan &amp; hosting undangan.</p>
+        <p class="mx-auto mt-3 max-w-xl text-brand-dark/70">Harga sekali bayar, tanpa biaya tersembunyi. Semua tema tersedia di semua paket.</p>
     </div>
 
     <div class="mt-12 grid gap-6 lg:grid-cols-3">
@@ -232,7 +256,7 @@
         </div>
         <div class="mt-12 grid gap-8 md:grid-cols-3">
             @php $langkah = [
-                ['1', 'Pilih tema &amp; paket', 'Tentukan tema favorit dan paket yang sesuai kebutuhanmu.'],
+                ['1', 'Pilih tema &amp; paket', 'Tentukan tema favorit dari 8 pilihan dan paket yang sesuai.'],
                 ['2', 'Kirim data via WhatsApp', 'Kirim data pasangan, foto, jadwal acara, dan info rekening.'],
                 ['3', 'Undangan jadi &amp; dibagikan', 'Kami buatkan, kamu tinggal bagikan link ke para tamu.'],
             ]; @endphp
@@ -262,6 +286,7 @@
     <div class="mt-10 space-y-3" x-data="{ open:null }">
         @php $faq = [
             ['Berapa lama undangan selesai?', 'Umumnya 1–3 hari kerja setelah data lengkap kami terima, tergantung paket dan antrean.'],
+            ['Ada tema Kristen dan Islam?', 'Ada. Tema Sanctuary untuk pemberkatan Kristiani (lengkap dengan ayat Alkitab) dan tema Nikkah untuk pernikahan Islami (dengan kaligrafi Arab). Ayatnya bisa disesuaikan permintaan.'],
             ['Bisa revisi?', 'Bisa. Revisi teks/data termasuk gratis sebelum undangan dipublikasikan. Ketentuan detail menyesuaikan paket.'],
             ['Berapa lama undangan aktif?', 'Undangan aktif hingga beberapa bulan setelah hari-H (bisa diperpanjang bila perlu).'],
             ['Apakah tamu unlimited?', 'Ya, satu link bisa dibagikan ke berapa pun tamu, dengan personalisasi nama per tamu.'],

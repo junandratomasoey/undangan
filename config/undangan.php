@@ -10,6 +10,7 @@ return [
         'flora'     => 'Flora — Botanical Pastel',
         'retro'     => 'Retro — Groovy Seventies',
         'sanctuary' => 'Sanctuary — Kristiani',
+        'nikkah'    => 'Nikkah — Islami',
     ],
 
     'plans' => [
