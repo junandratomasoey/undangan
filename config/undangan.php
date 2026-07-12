@@ -7,6 +7,7 @@ return [
         'tenun'   => 'Tenun — NTT Heritage',
         'modern'  => 'Modern — Urban Minimalist',
         'aurum'   => 'Aurum — Black & Gold',
+        'flora'   => 'Flora — Botanical Pastel',
     ],
 
     'plans' => [
