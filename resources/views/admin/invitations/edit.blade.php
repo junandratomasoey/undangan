@@ -41,7 +41,7 @@
 
     {{-- TAB: Detail --}}
     <section x-show="tab==='detail'" class="rounded-xl border bg-white p-6">
-        <form method="POST" action="{{ route('admin.invitations.update', $inv) }}" class="space-y-6">
+        <form method="POST" action="{{ route('admin.invitations.update', $inv) }}" enctype="multipart/form-data" class="space-y-6">
             @csrf @method('PUT')
             <div class="grid gap-5 sm:grid-cols-2">
                 <div><label class="mb-1 block text-sm font-medium">Nama Lengkap Pria</label>
@@ -76,8 +76,26 @@
                     <input name="slug" value="{{ old('slug',$inv->slug) }}" class="w-full rounded-lg border-slate-300 text-sm focus:border-navy focus:ring-navy"></div>
                 <div><label class="mb-1 block text-sm font-medium">Masa Aktif (kedaluwarsa)</label>
                     <input name="expires_at" type="date" value="{{ old('expires_at', optional($inv->expires_at)->format('Y-m-d')) }}" class="w-full rounded-lg border-slate-300 text-sm focus:border-navy focus:ring-navy"></div>
-                <div class="sm:col-span-2"><label class="mb-1 block text-sm font-medium">URL Musik <span class="text-slate-400">(platinum)</span></label>
-                    <input name="music_url" value="{{ old('music_url',$inv->music_url) }}" placeholder="https://…/lagu.mp3" class="w-full rounded-lg border-slate-300 text-sm focus:border-navy focus:ring-navy"></div>
+                <div class="sm:col-span-2">
+                    <label class="mb-1 block text-sm font-medium">Musik Latar <span class="text-slate-400">(platinum · MP3/WAV/OGG/M4A, maks 8MB)</span></label>
+
+                    @if($inv->music_url)
+                        <div class="mb-3 flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+                            <audio controls preload="none" src="{{ $inv->music_url }}" class="h-9 flex-1"></audio>
+                            <button type="button" x-data
+                                    @click="if(confirm('Hapus musik yang sedang terpasang?')) $refs.delMusic.submit()"
+                                    class="shrink-0 text-xs text-red-500 hover:underline">Hapus</button>
+                        </div>
+                        <form x-ref="delMusic" method="POST" action="{{ route('admin.invitations.music.destroy', $inv) }}" class="hidden">
+                            @csrf @method('DELETE')
+                        </form>
+                        <p class="mb-2 text-xs text-slate-400">Unggah file baru di bawah untuk mengganti.</p>
+                    @endif
+
+                    <input type="file" name="music_file" accept=".mp3,.wav,.ogg,.m4a,audio/*"
+                           class="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-navy file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-navy-deep">
+                    <p class="mt-1 text-xs text-slate-400">Pastikan file musik bebas royalti / berlisensi, untuk menghindari klaim hak cipta.</p>
+                </div>
             </div>
 
             <div class="flex items-center justify-between">

@@ -70,9 +70,29 @@ class InvitationController extends Controller
             'bride_parents' => $request->bride_parents,
         ]);
 
+        // Upload musik baru — hapus file lama dulu (kalau ada & bukan URL eksternal).
+        if ($request->hasFile('music_file')) {
+            $this->deleteMusicFile($invitation);
+            $data['music_url'] = $request->file('music_file')
+                ->store("invitations/{$invitation->id}/music", 'public');
+            $data['music_url'] = \Storage::url($data['music_url']);
+        }
+        // 'music_file' cuma dipakai untuk proses upload di atas — bukan kolom
+        // di tabel invitations, jadi harus dibuang sebelum update() dipanggil.
+        unset($data['music_file']);
+
         $invitation->update($data);
 
         return back()->with('ok', 'Perubahan tersimpan.');
+    }
+
+    /** Hapus musik yang sedang terpasang (tombol "Hapus Musik" di form). */
+    public function removeMusic(Invitation $invitation)
+    {
+        $this->deleteMusicFile($invitation);
+        $invitation->update(['music_url' => null]);
+
+        return back()->with('ok', 'Musik dihapus.');
     }
 
     public function togglePublish(Invitation $invitation)
@@ -109,9 +129,23 @@ class InvitationController extends Controller
             'theme'        => ['required', Rule::in(array_keys(config('undangan.themes')))],
             'plan'         => ['required', Rule::in(array_keys(config('undangan.plans')))],
             'accent_color' => ['required', 'string', 'max:9'],
-            'music_url'    => ['nullable', 'url', 'max:255'],
+            'music_file'   => ['nullable', 'file', 'mimes:mp3,mpga,wav,ogg,m4a', 'max:8192'], // maks 8MB
             'expires_at'   => ['nullable', 'date'],
         ]);
+    }
+
+    /** Hapus file musik lama dari storage, kalau memang file lokal (bukan URL eksternal). */
+    private function deleteMusicFile(Invitation $invitation): void
+    {
+        if (! $invitation->music_url) {
+            return;
+        }
+
+        $prefix = \Storage::url('');
+        if (str_starts_with($invitation->music_url, $prefix)) {
+            $path = ltrim(substr($invitation->music_url, strlen($prefix)), '/');
+            \Storage::disk('public')->delete($path);
+        }
     }
 
     private function uniqueSlug(?string $slug, ?string $groom, ?string $bride, ?Invitation $inv = null): string
