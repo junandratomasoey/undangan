@@ -80,17 +80,15 @@
                     <label class="mb-1 block text-sm font-medium">Musik Latar <span class="text-slate-400">(platinum · MP3/WAV/OGG/M4A, maks 8MB)</span></label>
 
                     @if($inv->music_url)
-                        <div class="mb-3 flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
-                            <audio controls preload="none" src="{{ $inv->music_url }}" class="h-9 flex-1"></audio>
-                            <button type="button" x-data
-                                    @click="if(confirm('Hapus musik yang sedang terpasang?')) $refs.delMusic.submit()"
-                                    class="shrink-0 text-xs text-red-500 hover:underline">Hapus</button>
-                        </div>
-                        <form x-ref="delMusic" method="POST" action="{{ route('admin.invitations.music.destroy', $inv) }}" class="hidden">
-                            @csrf @method('DELETE')
-                        </form>
-                        <p class="mb-2 text-xs text-slate-400">Unggah file baru di bawah untuk mengganti.</p>
-                    @endif
+                    <div class="mb-3 flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+                        <audio controls preload="none" src="{{ $inv->music_url }}" class="h-9 flex-1"></audio>
+
+                        <button type="button" onclick="confirmDeleteMusic()"
+                                class="shrink-0 text-xs text-red-500 hover:underline">
+                            Hapus
+                        </button>
+                    </div>
+                @endif
 
                     <input type="file" name="music_file" accept=".mp3,.wav,.ogg,.m4a,audio/*"
                            class="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-navy file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-navy-deep">
@@ -105,6 +103,27 @@
                 <button class="rounded-lg bg-navy px-6 py-2 text-sm font-medium text-white hover:bg-navy-deep">Simpan</button>
             </div>
         </form>
+    
+
+        @if($inv->music_url)
+        <form id="deleteMusicForm" method="POST"
+            action="{{ route('admin.invitations.music.destroy', $inv) }}"
+            class="hidden">
+            @csrf
+            @method('DELETE')
+        </form>
+
+        <script>
+        function confirmDeleteMusic() {
+            if (confirm('Hapus musik yang sedang terpasang?')) {
+                document.getElementById('deleteMusicForm').submit();
+            }
+        }
+        </script>
+        @endif
+
+
+
         <form x-ref="del" method="POST" action="{{ route('admin.invitations.destroy', $inv) }}" class="hidden">@csrf @method('DELETE')</form>
     </section>
 
